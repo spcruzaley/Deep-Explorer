@@ -28,7 +28,7 @@ Tested in ParrotOS and Kali Linux 2.0
 + Error importing... -> You should try manual pip install package
 + Error connecting to server -> Cant connect to ahmia browser
 If deep explorer can not execute service ..., do it manually, deep explorer checks the tor instance at the beginning so it will skip that part
-# Is this illegal
+# Is this illegal?
 It depends, Deep Explorer is not designed with the purpose of searching illegal things, remember that Tor it's a simple network
 
 # Contact Me
