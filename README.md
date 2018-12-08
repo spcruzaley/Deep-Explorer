@@ -9,9 +9,9 @@ python deepexplorer.py STRING_TO_SEARCH NUMBER_OF_RESULTS TYPE_OF_CRAWL
 
 Examples:
 
-python deepexplorer.py "legal thing" 40 default (will crawl if results obtained in browser do not reach 40)
+python deepexplorer.py "legal thing" 40 default legal (will crawl if results obtained in browser do not reach 40, also the script will show links which have "legal" string in html [like intext dork in google])
 
-python deepexplorer.py "legal thing" 30 all (will crawl every link obtained in browser [ultil reachs 30])
+python deepexplorer.py "ilegal thing" 30 all dni(will crawl every link obtained in browser [ultil reachs 30], also the script will show links which have "dni" string in html [like intext dork in google])
 
 python deepexplorer.py "legal thing" 30 none (do not crawl, only obtain links from browser)
 
