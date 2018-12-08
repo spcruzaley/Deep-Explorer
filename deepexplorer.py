@@ -4,7 +4,6 @@ try:
 except ImportError:
     print("Error importing 'sleep', from 'time'")
     exit()
-
 try:
     from interruptingcow import timeout
 except ImportError:
