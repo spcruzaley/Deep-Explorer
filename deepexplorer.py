@@ -4,6 +4,7 @@ try:
 except ImportError:
     print("Error importing 'sleep', from 'time'")
     exit()
+
 try:
     from interruptingcow import timeout
 except ImportError:
@@ -36,13 +37,13 @@ proxies = {'http':'socks5h://127.0.0.1:9050', 'https':'socks5h://127.0.0.1:9050'
 
 # -------------------- FUNCS --------------------
 
-def crawl(option, deeplinks, link):
-    error=0 # declare variable error, used in line 51
+def crawl(option, deeplinks, link, intexts):
+    error=0
     if option is "default":
         length_of_web_links_to_crawl = len(deeplinks)
         iterations = 0
         
-        while len(deeplinks) <= number_results or length_of_web_links_to_crawl <= iterations: # while not reached number of links or the bucle iterations are greather than the links of browser...
+        while len(deeplinks) <= number_results or length_of_web_links_to_crawl <= iterations:
             try:
                 with timeout(10):
                     crawl = requests.get(deeplinks[iterations], proxies=proxies)
@@ -51,26 +52,29 @@ def crawl(option, deeplinks, link):
             if not error:
                 crawl = crawl.text
                 try:
-                    soup = BeautifulSoup(crawl, "lxml") # soup object is for manipulating html (extract href)
+                    soup = BeautifulSoup(crawl, "lxml")
                 except:
                     print("Error creating 'soup' object")
                     os.system("sudo service tor stop")
                     exit()
                 
-                for a in soup.find_all('a', href=True): # extract href
+                for a in soup.find_all('a', href=True):
                     if len(deeplinks) >= number_results:
                         print(" \033[0;32m LINKS COLLECTED!\033[0m")
                         os.system("sudo service tor stop")
                         exit()
-                    darklink = isonion(iterations['href']) # is a onion link?, check isonion() func 
-                    if darklink: # if is not a onion link return false, but if is a onion link returns it
+                    darklink = isonion(iterations['href'])    
+                    if darklink:
                     # write to file
-                        if not darklink in deeplinks: # if link is not in previus results...
-                            with open("results.txt", 'a') as f:
-                                f.write("\n" + darklink)
-                            f.close()
-                            deeplinks.append(darklink)         
-                            print(darklink)    
+                        if not darklink in deeplinks:
+                            if intexts in crawl:
+                                with open("results.txt", 'a') as f:
+                                    f.write("\n" + darklink)
+                                f.close()
+                                deeplinks.append(darklink)         
+                                print(darklink)
+                            else:
+                                print("valid link, but have not '" + intexts + "' inside: \033[0;31m" + darklink + "\033[0m")   
                 iterations+=1      
     if option is "all":
         try:
@@ -97,11 +101,14 @@ def crawl(option, deeplinks, link):
                 if darklink:
                     # write to file
                     if not darklink in deeplinks:
-                        with open("results.txt", 'a') as f:
-                            f.write("\n" + darklink)
-                        f.close()
-                        deeplinks.append(darklink)
-                        print(darklink)
+                        if intexts in crawl:
+                            with open("results.txt", 'a') as f:
+                                f.write("\n" + darklink)
+                            f.close()
+                            deeplinks.append(darklink)
+                            print(darklink)
+                        else: 
+                            print("valid link, but have not '" + intexts + "' inside: \033[0;31m" + darklink + "\033[0m")   
         else:
             print("Skipping, takes to long")
 def isonion(darklink):
@@ -121,14 +128,14 @@ def isonion(darklink):
         else:
                 return isvalid # else... return the link!
                 
-def search(crawling):
+def search(crawling, intexts):
     darklinks = []
     print("Searching. . . ", end="", flush=True)
     web = "http://msydqstlz2kzerdg.onion/search/?q="
     search_query = web + search_string
     
     try:
-        content = requests.get(search_query, proxies=proxies) # request to browser, where do you think links come from?
+        content = requests.get(search_query, proxies=proxies)
         content = content.text
     except:
         print("\nError connecting to server")  
@@ -150,26 +157,31 @@ def search(crawling):
             
         darklink = isonion(a['href']) # if not reached, darklink will be a tor link ( if current href is valid)
         if darklink: # if valid...  
+        
             if not darklink in darklinks: # if not present in list
-                with open("results.txt", 'a') as f:
-                    f.write("\n" + darklink)
-                f.close()
-                print(darklink)   
-                darklinks.append(darklink) # add it
-                if "all" in crawling:
-                    crawl("all", darklinks, darklink)
+                if intexts in content:
+                    with open("results.txt", 'a') as f:
+                        f.write("\n" + darklink)
+                    f.close()
+                    print(darklink)   
+                    darklinks.append(darklink) # add it
+                    if "all" in crawling:
+                        crawl("all", darklinks, darklink, intexts)
+                else:
+                
+                    print("valid link, but have not '" + intexts + "' inside: \033[0;31m" + darklink + "\033[0m")   
     if "none" in crawling:
         print("Search completed.")
         exit()
     print("Not enought links in browser, crawling...")
     if darklinks:
         if "default" in crawling:
-            crawl("default", darklinks)
+            crawl("default", darklinks, intexts)
         else:
             print("Not enought links in browser, but crawl disabled")
             os.system("sudo service tor stop")
             exit()
-    else: # if browser have 0 links, deep explorer cant crawl!
+    else:
         print("0 links!, cant crawl...")
         os.system("sudo service tor stop")
         exit()    
@@ -177,7 +189,7 @@ def search(crawling):
 def torproxy():
     print("Checking Tor instance", end="", flush=True)
     try:
-        check = requests.get("https://google.es", proxies=proxies) # google never gets down... so, if cant cant connect...
+        check = requests.get("https://google.es", proxies=proxies)
     except:
         print(" [\033[0;31mNot connected\033[0m]")
         print("Starting Tor instance ", end="", flush=True)
@@ -195,7 +207,7 @@ def torproxy():
 
 # -------------------- MAIN PROGRAM --------------------    
     
-def printred(banners): # decorator
+def printred(banners):
     def interns():
         print("\033[0;31m")
         banners()
@@ -214,8 +226,8 @@ def banner():
     print("                                                                         ")
 
 banner()
-if len(sys.argv) is not 4 or sys.argv[3] not in ["all", "none", "default"]:
-    print("dexplorer.py SEARCH NUMBER_OF_RESULTS crawl_options")
+if len(sys.argv) not in [4,5] or sys.argv[3] not in ["all", "none", "default"]:
+    print("dexplorer.py SEARCH NUMBER_OF_RESULTS crawl_options intext")
     print("Crawl Options:")
     print("             all) crawl each link")
     print("             none) dont crawl")
@@ -230,8 +242,9 @@ if __name__ == "__main__":
         search_string = sys.argv[1]
         number_results = int(sys.argv[2])
         crawld = sys.argv[3]
-        search(crawld) # main func
+        intext = sys.argv[4]
+        search(crawld, intext) # main func
     except KeyboardInterrupt:
         print("\nExiting. . .")
         os.system("sudo service tor stop")
-        exit()
+    
