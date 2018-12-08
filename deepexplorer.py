@@ -4,7 +4,6 @@ try:
 except ImportError:
     print("Error importing 'sleep', from 'time'")
     exit()
-
 try:
     from interruptingcow import timeout
 except ImportError:
@@ -247,4 +246,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\nExiting. . .")
         os.system("sudo service tor stop")
-    
+        exit()
