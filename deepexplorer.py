@@ -38,7 +38,7 @@ proxies = {'http':'socks5h://127.0.0.1:9050', 'https':'socks5h://127.0.0.1:9050'
 # -------------------- FUNCS --------------------
 
 def crawl(option, deeplinks, link):
-    error = False
+    error=0
     if option is "default":
         length_of_web_links_to_crawl = len(deeplinks)
         iterations = 0
@@ -48,7 +48,7 @@ def crawl(option, deeplinks, link):
                 with timeout(10):
                     crawl = requests.get(deeplinks[iterations], proxies=proxies)
             except:
-                error=True
+                error=1
             if not error:
                 crawl = crawl.text
                 try:
@@ -57,7 +57,7 @@ def crawl(option, deeplinks, link):
                     print("Error creating 'soup' object")
                     os.system("sudo service tor stop")
                     exit()
-            
+                
                 for a in soup.find_all('a', href=True):
                     if len(deeplinks) >= number_results:
                         print(" \033[0;32m LINKS COLLECTED!\033[0m")
@@ -72,39 +72,39 @@ def crawl(option, deeplinks, link):
                             f.close()
                             deeplinks.append(darklink)         
                             print(darklink)    
-                iterations+=1          
-        if option is "all":
-           
+                iterations+=1      
+    if option is "all":
+        try:
+            with timeout(10):
+                crawl = requests.get(link, proxies=proxies)
+        except:
+            error = 1
+        if not error:
+            crawl = crawl.text
             try:
-                with timeout(10):
-                    crawl = requests.get(link, proxies=proxies)
+                soup = BeautifulSoup(crawl, "lxml")
             except:
-                error=1
-            if not error:
-                crawl = crawl.text
-                try:
-                    soup = BeautifulSoup(crawl, "lxml")
-                except:
-                    print("Error creating 'soup' object")
+                print("Error creating 'soup' object")
+                os.system("sudo service tor stop")
+                exit()
+            print("Crawling from : " + "[\033[0;31m" + link + "\033[0m]")
+            for a in soup.find_all('a', href=True):
+                if len(deeplinks) >= number_results:     
+                    print(" \033[0;32m LINKS COLLECTED!\033[0m")
                     os.system("sudo service tor stop")
                     exit()
-                print("Crawling from : " + "[\033[0;31m" + link + "\033[0m]")
-                for a in soup.find_all('a', href=True):
-                    if len(deeplinks) >= number_results:     
-                        print(" \033[0;32m LINKS COLLECTED!\033[0m")
-                        os.system("sudo service tor stop")
-                        exit()
-                   
-                    darklink = isonion(a['href'])   
-                    if darklink:
-                        # write to file
-                        if not darklink in deeplinks:
-                            with open("results.txt", 'a') as f:
-                                f.write("\n" + darklink)
-                            f.close()
-                            deeplinks.append(darklink)
-                            print(darklink)
-
+                    
+                darklink = isonion(a['href'])   
+                if darklink:
+                    # write to file
+                    if not darklink in deeplinks:
+                        with open("results.txt", 'a') as f:
+                            f.write("\n" + darklink)
+                        f.close()
+                        deeplinks.append(darklink)
+                        print(darklink)
+        else:
+            print("Skipping, takes to long")
 def isonion(darklink):
     if not ".onion" in darklink or "http://msydqstlz2kzerdg.onion" in darklink: # if there's not ".onion" in href, its not a tor link so... return False
         return False
@@ -180,7 +180,7 @@ def torproxy():
     try:
         check = requests.get("https://google.es", proxies=proxies)
     except:
-        print(" [\033[0;31mNot connected\033[0m]")
+        print(" [\033[0;31mNo connected\033[0m]")
         print("Starting Tor instance ", end="", flush=True)
         os.system("service tor start")
         sleep(8)
