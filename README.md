@@ -15,7 +15,6 @@ python deepexplorer.py "legal thing" 30 all (will crawl every link obtained in b
 
 python deepexplorer.py "legal thing" 30 none (do not crawl, only obtain links from browser)
 
-
 # About
 Deep Explorer is a tool designed to search (any) thing in a few seconds
 
