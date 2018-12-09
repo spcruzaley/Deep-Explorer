@@ -1,34 +1,15 @@
 # -------------------- IMPORTS --------------------
 try:
     from time import sleep
-except ImportError:
-    print("Error importing 'sleep', from 'time'")
-    exit()
-try:
     from interruptingcow import timeout
-except ImportError:
-    print("Error importing 'interruptingcow'")
-    exit()
-try:
     import sys
-except ImportError:
-    print("Error importing 'sys'")
-    exit()
-try:
     from bs4 import BeautifulSoup
-except ImportError:
-    print("Error importing 'beatifulsoup'")
-    exit()
-try:
     import requests
-except ImportError:
-    print("Error importing 'requests' module")
-    exit()
-try:
     import os
-except ImportError:
-    print("Error importing 'os' module")
+except ImportError as e:
+    print("Error importing '"+e.name+"'")
     exit()
+
     
 # -------------------- PROXIES --------------------
 
