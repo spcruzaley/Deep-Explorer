@@ -241,7 +241,7 @@ if __name__ == "__main__":
         search_string = sys.argv[1]
         number_results = int(sys.argv[2])
         crawld = sys.argv[3]
-        if sys.argv[4]
+        if sys.argv[4]:
             intext = sys.argv[4]
         else:
             intext = ""
