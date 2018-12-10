@@ -66,7 +66,7 @@ def crawl(option, deeplinks, link, intexts):
                     if darklink:
                     # write to file
                         if not darklink in deeplinks:
-                            if intexts in crawl:
+                            if intexts in crawl or intexts == "":
                                 with open("results.txt", 'a') as f:
                                     f.write("\n" + darklink)
                                 f.close()
@@ -100,7 +100,7 @@ def crawl(option, deeplinks, link, intexts):
                 if darklink:
                     # write to file
                     if not darklink in deeplinks:
-                        if intexts in crawl:
+                        if intexts in crawl or intexts == "":
                             with open("results.txt", 'a') as f:
                                 f.write("\n" + darklink)
                             f.close()
@@ -158,7 +158,7 @@ def search(crawling, intexts):
         if darklink: # if valid...  
         
             if not darklink in darklinks: # if not present in list
-                if intexts in content:
+                if intexts in content or intexts == "":
                     with open("results.txt", 'a') as f:
                         f.write("\n" + darklink)
                     f.close()
@@ -241,7 +241,7 @@ if __name__ == "__main__":
         search_string = sys.argv[1]
         number_results = int(sys.argv[2])
         crawld = sys.argv[3]
-        if sys.argv[4]:
+        if len(sys.argv) is 5:
             intext = sys.argv[4]
         else:
             intext = ""
