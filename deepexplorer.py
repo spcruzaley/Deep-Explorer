@@ -1,15 +1,35 @@
 # -------------------- IMPORTS --------------------
 try:
     from time import sleep
-    from interruptingcow import timeout
-    import sys
-    from bs4 import BeautifulSoup
-    import requests
-    import os
-except ImportError as e:
-    print("Error importing " + e.__class__.__name__)
+except ImportError:
+    print("Error importing 'sleep', from 'time'")
     exit()
-
+try:
+    from interruptingcow import timeout
+except ImportError:
+    print("Error importing 'interruptingcow'")
+    exit()
+try:
+    import sys
+except ImportError:
+    print("Error importing 'sys'")
+    exit()
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    print("Error importing 'beatifulsoup'")
+    exit()
+try:
+    import requests
+except ImportError:
+    print("Error importing 'requests' module")
+    exit()
+try:
+    import os
+except ImportError:
+    print("Error importing 'os' module")
+    exit()
+    
 # -------------------- PROXIES --------------------
 
 proxies = {'http':'socks5h://127.0.0.1:9050', 'https':'socks5h://127.0.0.1:9050'} # tor proxy
