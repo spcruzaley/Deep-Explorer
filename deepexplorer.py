@@ -7,7 +7,7 @@ try:
     import requests
     import os
 except ImportError as e:
-    print("Error importing '"+e.name+"'")
+    print("Error importing " + e.__class__.__name__)
     exit()
 
 # -------------------- PROXIES --------------------
