@@ -155,10 +155,17 @@ def search(crawling, intexts):
             exit()
             
         darklink = isonion(a['href']) # if not reached, darklink will be a tor link ( if current href is valid)
-        if darklink: # if valid...  
-        
+        darklinkd = True
+        try:
+            contain = requests.get(darklink, proxies=proxies)
+            contain = contain.text
+        except:
+            darklinkd = False
+        if darklink and darklinkd: # if valid...  
+          
             if not darklink in darklinks: # if not present in list
-                if intexts in content or intexts == "":
+                if intexts in contain:
+
                     with open("results.txt", 'a') as f:
                         f.write("\n" + darklink)
                     f.close()
@@ -167,7 +174,7 @@ def search(crawling, intexts):
                     if "all" in crawling:
                         crawl("all", darklinks, darklink, intexts)
                 else:
-                
+
                     print("valid link, but have not '" + intexts + "' inside: \033[0;31m" + darklink + "\033[0m")   
     if "none" in crawling:
         print("Search completed.")
@@ -245,7 +252,7 @@ if __name__ == "__main__":
             intext = sys.argv[4]
         else:
             intext = ""
-        search(crawld, intext) # main func
+        search(crawld, intext)
     except KeyboardInterrupt:
         print("\nExiting. . .")
         os.system("sudo service tor stop")
