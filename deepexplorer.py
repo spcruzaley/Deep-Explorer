@@ -51,7 +51,7 @@ def crawl(option, deeplinks, link, intexts):
             if not error:
                 crawl = crawl.text
                 try:
-                    soup = BeautifulSoup(crawl, "lxml")
+                    soup = BeautifulSoup(crawl, "html.parser")
                 except:
                     print("Error creating 'soup' object")
                     os.system("sudo service tor stop")
@@ -84,7 +84,7 @@ def crawl(option, deeplinks, link, intexts):
         if not error:
             crawl = crawl.text
             try:
-                soup = BeautifulSoup(crawl, "lxml")
+                soup = BeautifulSoup(crawl, "html.parser")
             except:
                 print("Error creating 'soup' object")
                 os.system("sudo service tor stop")
@@ -140,7 +140,7 @@ def search(crawling, intexts):
         print("\nError connecting to server")  
         exit()
     try:
-        soup = BeautifulSoup(content, "lxml")
+        soup = BeautifulSoup(content, "html.parser")
     except:
         print("\nError creating 'soup' object")
         os.system("sudo service tor stop")
@@ -199,7 +199,7 @@ def torproxy():
     except:
         print(" [\033[0;31mNot connected\033[0m]")
         print("Starting Tor instance ", end="", flush=True)
-        os.system("service tor start")
+        os.system("sudo service tor start")
         sleep(8)
     print(" \033[0;32m [OK]\033[0m")
     print("Checking Tor proxy ", end="", flush=True)
@@ -228,8 +228,20 @@ def banner():
     print(" |_____|_____|_____|   __|   |_____|__.__|   __|__|_____|__| |_____|__|  ")
     print("                   |__|                  |__|                            ")
     print("                                                                         ")
-    print("                                                                         ")
-    print("                                                                         ")
+
+    print("\033[1;34m")
+    print("----------------------------------------------------------------------------------")
+    print("Adittions and fixes by ")
+    print("");
+    print("███████╗██████╗  ██████╗██████╗ ██╗   ██╗███████╗ █████╗ ██╗     ███████╗██╗   ██╗")
+    print("██╔════╝██╔══██╗██╔════╝██╔══██╗██║   ██║╚══███╔╝██╔══██╗██║     ██╔════╝╚██╗ ██╔╝")
+    print("███████╗██████╔╝██║     ██████╔╝██║   ██║  ███╔╝ ███████║██║     █████╗   ╚████╔╝ ")
+    print("╚════██║██╔═══╝ ██║     ██╔══██╗██║   ██║ ███╔╝  ██╔══██║██║     ██╔══╝    ╚██╔╝  ")
+    print("███████║██║     ╚██████╗██║  ██║╚██████╔╝███████╗██║  ██║███████╗███████╗   ██║   ")
+    print("╚══════╝╚═╝      ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝   ")
+    print("");
+    print("----------------------------------------------------------------------------------")
+    print("\033[0m")
 
 banner()
 if len(sys.argv) not in [4,5] or sys.argv[3] not in ["all", "none", "default"]:
